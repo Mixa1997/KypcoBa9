@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище SustemShopDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="MenegersDB">
+          <Key>
+            <PropertyRef Name="MenegerID" />
+          </Key>
+          <Property Name="MenegerID" Type="int" Nullable="false" />
+          <Property Name="FIOMeneger" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ViewTovarManager" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneManager" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "SustemShopDB.dbo.SellersDB" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="SellersDB">
+          <Key>
+            <PropertyRef Name="SellerID" />
+            <PropertyRef Name="FIOSeller" />
+            <PropertyRef Name="ViewTovarSeller" />
+            <PropertyRef Name="PhoneSeller" />
+          </Key>
+          <Property Name="SellerID" Type="int" Nullable="false" />
+          <Property Name="FIOSeller" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ViewTovarSeller" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneSeller" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SuppliersDB">
+          <Key>
+            <PropertyRef Name="id_tovar" />
+            <PropertyRef Name="id_manager" />
+            <PropertyRef Name="Pricetovar" />
+            <PropertyRef Name="Koltovar" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="id_tovar" Type="int" Nullable="false" />
+          <Property Name="id_manager" Type="int" Nullable="false" />
+          <Property Name="Pricetovar" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="Koltovar" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TovarDB">
+          <Key>
+            <PropertyRef Name="TovarID" />
+            <PropertyRef Name="TovarKol" />
+            <PropertyRef Name="TovarPrice" />
+          </Key>
+          <Property Name="TovarID" Type="int" Nullable="false" />
+          <Property Name="TovarName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TovarKol" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="TovarPrice" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="ViewTovar" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_SuppliersDB_MenegersDB">
+          <End Role="MenegersDB" Type="Self.MenegersDB" Multiplicity="1" />
+          <End Role="SuppliersDB" Type="Self.SuppliersDB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MenegersDB">
+              <PropertyRef Name="MenegerID" />
+            </Principal>
+            <Dependent Role="SuppliersDB">
+              <PropertyRef Name="id_manager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuppliersDB_TovarDB">
+          <End Role="TovarDB" Type="Self.TovarDB" Multiplicity="1" />
+          <End Role="SuppliersDB" Type="Self.SuppliersDB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TovarDB">
+              <PropertyRef Name="TovarID" />
+              <PropertyRef Name="TovarKol" />
+              <PropertyRef Name="TovarPrice" />
+            </Principal>
+            <Dependent Role="SuppliersDB">
+              <PropertyRef Name="id_tovar" />
+              <PropertyRef Name="Koltovar" />
+              <PropertyRef Name="Pricetovar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище SustemShopDBModelContainer">
+          <EntitySet Name="MenegersDB" EntityType="Self.MenegersDB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SuppliersDB" EntityType="Self.SuppliersDB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TovarDB" EntityType="Self.TovarDB" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SellersDB" EntityType="Self.SellersDB" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [SellersDB].[SellerID] AS [SellerID], 
+    [SellersDB].[FIOSeller] AS [FIOSeller], 
+    [SellersDB].[ViewTovarSeller] AS [ViewTovarSeller], 
+    [SellersDB].[PhoneSeller] AS [PhoneSeller]
+    FROM [dbo].[SellersDB] AS [SellersDB]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_SuppliersDB_MenegersDB" Association="Self.FK_SuppliersDB_MenegersDB">
+            <End Role="MenegersDB" EntitySet="MenegersDB" />
+            <End Role="SuppliersDB" EntitySet="SuppliersDB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuppliersDB_TovarDB" Association="Self.FK_SuppliersDB_TovarDB">
+            <End Role="TovarDB" EntitySet="TovarDB" />
+            <End Role="SuppliersDB" EntitySet="SuppliersDB" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SustemShopDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MenegersDB">
+          <Key>
+            <PropertyRef Name="MenegerID" />
+          </Key>
+          <Property Name="MenegerID" Type="Int32" Nullable="false" />
+          <Property Name="FIOMeneger" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ViewTovarManager" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PhoneManager" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="SuppliersDB" Relationship="Self.FK_SuppliersDB_MenegersDB" FromRole="MenegersDB" ToRole="SuppliersDB" />
+        </EntityType>
+        <EntityType Name="SuppliersDB">
+          <Key>
+            <PropertyRef Name="id_tovar" />
+            <PropertyRef Name="id_manager" />
+            <PropertyRef Name="Pricetovar" />
+            <PropertyRef Name="Koltovar" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="id_tovar" Type="Int32" Nullable="false" />
+          <Property Name="id_manager" Type="Int32" Nullable="false" />
+          <Property Name="Pricetovar" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="Koltovar" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <NavigationProperty Name="MenegersDB" Relationship="Self.FK_SuppliersDB_MenegersDB" FromRole="SuppliersDB" ToRole="MenegersDB" />
+          <NavigationProperty Name="TovarDB" Relationship="Self.FK_SuppliersDB_TovarDB" FromRole="SuppliersDB" ToRole="TovarDB" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TovarDB">
+          <Key>
+            <PropertyRef Name="TovarID" />
+            <PropertyRef Name="TovarKol" />
+            <PropertyRef Name="TovarPrice" />
+          </Key>
+          <Property Name="TovarID" Type="Int32" Nullable="false" />
+          <Property Name="TovarName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TovarKol" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="TovarPrice" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="ViewTovar" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="SuppliersDB" Relationship="Self.FK_SuppliersDB_TovarDB" FromRole="TovarDB" ToRole="SuppliersDB" />
+        </EntityType>
+        <EntityType Name="SellersDB">
+          <Key>
+            <PropertyRef Name="SellerID" />
+            <PropertyRef Name="FIOSeller" />
+            <PropertyRef Name="ViewTovarSeller" />
+            <PropertyRef Name="PhoneSeller" />
+          </Key>
+          <Property Name="SellerID" Type="Int32" Nullable="false" />
+          <Property Name="FIOSeller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ViewTovarSeller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PhoneSeller" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_SuppliersDB_MenegersDB">
+          <End Role="MenegersDB" Type="Self.MenegersDB" Multiplicity="1" />
+          <End Role="SuppliersDB" Type="Self.SuppliersDB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MenegersDB">
+              <PropertyRef Name="MenegerID" />
+            </Principal>
+            <Dependent Role="SuppliersDB">
+              <PropertyRef Name="id_manager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuppliersDB_TovarDB">
+          <End Role="TovarDB" Type="Self.TovarDB" Multiplicity="1" />
+          <End Role="SuppliersDB" Type="Self.SuppliersDB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TovarDB">
+              <PropertyRef Name="TovarID" />
+              <PropertyRef Name="TovarKol" />
+              <PropertyRef Name="TovarPrice" />
+            </Principal>
+            <Dependent Role="SuppliersDB">
+              <PropertyRef Name="id_tovar" />
+              <PropertyRef Name="Koltovar" />
+              <PropertyRef Name="Pricetovar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SustemShopDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MenegersDB" EntityType="Self.MenegersDB" />
+          <EntitySet Name="SuppliersDB" EntityType="Self.SuppliersDB" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="TovarDB" EntityType="Self.TovarDB" />
+          <EntitySet Name="SellersDB" EntityType="Self.SellersDB" />
+          <AssociationSet Name="FK_SuppliersDB_MenegersDB" Association="Self.FK_SuppliersDB_MenegersDB">
+            <End Role="MenegersDB" EntitySet="MenegersDB" />
+            <End Role="SuppliersDB" EntitySet="SuppliersDB" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuppliersDB_TovarDB" Association="Self.FK_SuppliersDB_TovarDB">
+            <End Role="TovarDB" EntitySet="TovarDB" />
+            <End Role="SuppliersDB" EntitySet="SuppliersDB" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище SustemShopDBModelContainer" CdmEntityContainer="SustemShopDBEntities">
+          <EntitySetMapping Name="MenegersDB">
+            <EntityTypeMapping TypeName="SustemShopDBModel.MenegersDB">
+              <MappingFragment StoreEntitySet="MenegersDB">
+                <ScalarProperty Name="MenegerID" ColumnName="MenegerID" />
+                <ScalarProperty Name="FIOMeneger" ColumnName="FIOMeneger" />
+                <ScalarProperty Name="ViewTovarManager" ColumnName="ViewTovarManager" />
+                <ScalarProperty Name="PhoneManager" ColumnName="PhoneManager" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SuppliersDB">
+            <EntityTypeMapping TypeName="SustemShopDBModel.SuppliersDB">
+              <MappingFragment StoreEntitySet="SuppliersDB">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="id_tovar" ColumnName="id_tovar" />
+                <ScalarProperty Name="id_manager" ColumnName="id_manager" />
+                <ScalarProperty Name="Pricetovar" ColumnName="Pricetovar" />
+                <ScalarProperty Name="Koltovar" ColumnName="Koltovar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="SustemShopDBModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TovarDB">
+            <EntityTypeMapping TypeName="SustemShopDBModel.TovarDB">
+              <MappingFragment StoreEntitySet="TovarDB">
+                <ScalarProperty Name="TovarID" ColumnName="TovarID" />
+                <ScalarProperty Name="TovarName" ColumnName="TovarName" />
+                <ScalarProperty Name="TovarKol" ColumnName="TovarKol" />
+                <ScalarProperty Name="TovarPrice" ColumnName="TovarPrice" />
+                <ScalarProperty Name="ViewTovar" ColumnName="ViewTovar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SellersDB">
+            <EntityTypeMapping TypeName="SustemShopDBModel.SellersDB">
+              <MappingFragment StoreEntitySet="SellersDB">
+                <ScalarProperty Name="SellerID" ColumnName="SellerID" />
+                <ScalarProperty Name="FIOSeller" ColumnName="FIOSeller" />
+                <ScalarProperty Name="ViewTovarSeller" ColumnName="ViewTovarSeller" />
+                <ScalarProperty Name="PhoneSeller" ColumnName="PhoneSeller" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
